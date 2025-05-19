@@ -12,7 +12,21 @@ export const PostContext = createContext(
     }
 );
 
-
+const DEFAULT_POST_LIST = [{
+    id: "1",
+    title: "Go to Mumbai",
+    body: "Hi freinds, I am going to mumbai for my vacation.Hope to enjoy a lot.Peace out.",
+    reactions: 2,
+    tags: ['#vacation', '#enjoy', '#marinedrive']
+},
+{
+    id: "2",
+    title: "Go to Dubai",
+    body: "Hi freinds, I am going to mumbai for my vacation.Hope to enjoy a lot.Peace out.",
+    reactions: 15,
+    tags: ['#vacation', '#enjoy', '#burjkhalifa']
+},
+]
 
 const postReducerHandler = (currState, action) => {
     let newPostList = currState;
@@ -26,10 +40,7 @@ const postReducerHandler = (currState, action) => {
             tags: action.payload.tags
         },
         ...currState]
-    } else if (action.type === "ADD_INITIAL_POSTS"){
-        newPostList = action.payload.posts
-    }
-    else if (action.type === "UPDATE_POST") {
+    } else if (action.type === "UPDATE_POST") {
         newPostList = currState.map((post) => {
             if (post.id === action.payload.formData.id) {
                 return {
@@ -52,7 +63,7 @@ const postReducerHandler = (currState, action) => {
 
 export const PostContextProvider = ({ children }) => {
 
-    const [currState, dispatchPostMethod] = useReducer(postReducerHandler,[])
+    const [currState, dispatchPostMethod] = useReducer(postReducerHandler, DEFAULT_POST_LIST)
 
     const [post, setPost] = useState(null);
 
@@ -68,17 +79,6 @@ export const PostContextProvider = ({ children }) => {
             }
         }
         dispatchPostMethod(addPostActionObject)
-    }
-
-    
-    const addInitalPosts = (posts) => {
-       const addInialPostsActionObject = {
-        type:"ADD_INITIAL_POSTS",
-        payload:{
-            posts
-        }
-       }
-       dispatchPostMethod(addInialPostsActionObject);
     }
 
     const deletePostHandler = (postId) => {
@@ -112,7 +112,6 @@ export const PostContextProvider = ({ children }) => {
                 postList: currState,
                 postToBeEdit: post,
                 addPostHandler,
-                addInitalPosts,
                 deletePostHandler,
                 editPostHandler,
                 updatePostHandler

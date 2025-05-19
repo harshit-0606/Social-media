@@ -9,7 +9,7 @@ function Card({id, title, body, reactions, tags ,}) {
       <div className="card-body">
         <h5 className="card-title">{title}</h5>
         <p className="card-text">{body}</p>
-        <p className="card-text">{`No. of Likes are ${reactions.likes} and Dislikes are ${reactions.dislikes}`}</p>
+        <p className="card-text">{reactions}</p>
         <div className="card-tags">
           {tags.map((tag,index) => (
             <span key={index}>{tag}</span>
