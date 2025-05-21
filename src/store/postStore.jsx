@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { createContext, useReducer, useState } from "react";
+import { createContext, useCallback, useReducer, useState } from "react";
 
 
 export const PostContext = createContext(
@@ -64,10 +64,10 @@ const postReducerHandler = (currState, action) => {
 export const PostContextProvider = ({ children }) => {
 
     const [currState, dispatchPostMethod] = useReducer(postReducerHandler, DEFAULT_POST_LIST)
-
     const [post, setPost] = useState(null);
 
-    const addPostHandler = (title, body, reactions, tags) => {
+    const addPostHandler = useCallback(
+          (title, body, reactions, tags) => {
         const addPostActionObject = {
             type: "NEW_POST",
             payload: {
@@ -79,9 +79,10 @@ export const PostContextProvider = ({ children }) => {
             }
         }
         dispatchPostMethod(addPostActionObject)
-    }
+    },[])
+  
 
-    const deletePostHandler = (postId) => {
+    const deletePostHandler = useCallback((postId) => {
         const deletePostActionObject = {
             type: "DELETE_POST",
             payload: {
@@ -89,14 +90,18 @@ export const PostContextProvider = ({ children }) => {
             }
         }
         dispatchPostMethod(deletePostActionObject)
-    }
+    },[])
+   
 
-    const editPostHandler = (id) => {
+    const editPostHandler = useCallback((
+        (id) => {
         const post = currState.find((post) => post.id === id)
         setPost(post);
     }
+    ),[currState])
 
-    const updatePostHandler = (formData) => {
+    const updatePostHandler = useCallback(
+        (formData) => {
         const updatePostActionObject = {
             type: "UPDATE_POST",
             payload: {
@@ -104,7 +109,7 @@ export const PostContextProvider = ({ children }) => {
             }
         }
         dispatchPostMethod(updatePostActionObject)
-    }
+    },[])
 
     return (
         <PostContext.Provider value={
